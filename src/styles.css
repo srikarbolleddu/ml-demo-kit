@@ -1,0 +1,642 @@
+/*
+ * ml-demo-kit styles. Every visual decision is a --mdk-* custom property, so a host page restyles
+ * the kit by setting variables on `.mdk-root` (or any ancestor); no class overrides needed.
+ */
+.mdk-root {
+  --mdk-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mdk-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --mdk-bg: #ffffff;
+  --mdk-surface: #f6f7f9;
+  --mdk-text: #15181d;
+  --mdk-muted: #5b6472;
+  --mdk-border: #dfe3e8;
+  --mdk-accent: #2f5bea;
+  --mdk-accent-contrast: #ffffff;
+  --mdk-positive: #13795b;
+  --mdk-negative: #b3261e;
+  --mdk-series-1: #8a94a6;
+  --mdk-series-2: #2f5bea;
+  --mdk-series-3: #d9822b;
+  --mdk-series-4: #13795b;
+  --mdk-radius: 10px;
+  --mdk-gap: 1rem;
+
+  font-family: var(--mdk-font);
+  color: var(--mdk-text);
+  background: var(--mdk-bg);
+  line-height: 1.5;
+  padding: var(--mdk-padding, 0);
+  border-radius: var(--mdk-radius);
+  display: grid;
+  gap: var(--mdk-gap);
+}
+
+@media (prefers-color-scheme: dark) {
+  .mdk-root:where(:not([data-mdk-theme="light"])) {
+    --mdk-bg: #0f1216;
+    --mdk-surface: #171b21;
+    --mdk-text: #e8ebef;
+    --mdk-muted: #9aa3b0;
+    --mdk-border: #2a3039;
+    --mdk-accent: #7c9bff;
+    --mdk-accent-contrast: #0f1216;
+    --mdk-positive: #4cc59a;
+    --mdk-negative: #ff8a80;
+    --mdk-series-1: #6f7889;
+    --mdk-series-2: #7c9bff;
+  }
+}
+
+.mdk-root *,
+.mdk-root *::before,
+.mdk-root *::after {
+  box-sizing: border-box;
+}
+
+.mdk-root :where(h3, h4, p, dl, dd, ol, ul, figure, fieldset) {
+  margin: 0;
+  padding: 0;
+}
+
+.mdk-title {
+  font-size: 1.25rem;
+  font-weight: 650;
+}
+.mdk-subtitle {
+  font-size: 1rem;
+  font-weight: 620;
+}
+.mdk-label {
+  font-size: 0.8125rem;
+  font-weight: 560;
+}
+.mdk-muted {
+  color: var(--mdk-muted);
+}
+.mdk-help {
+  color: var(--mdk-muted);
+  font-size: 0.75rem;
+}
+.mdk-header {
+  display: grid;
+  gap: 0.25rem;
+}
+
+/* Buttons and chips */
+.mdk-button {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--mdk-radius);
+  border: 1px solid var(--mdk-accent);
+  background: var(--mdk-accent);
+  color: var(--mdk-accent-contrast);
+  cursor: pointer;
+  justify-self: start;
+}
+.mdk-button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.mdk-button--ghost {
+  background: transparent;
+  color: var(--mdk-accent);
+  padding: 0.3rem 0.8rem;
+}
+.mdk-root :focus-visible {
+  outline: 2px solid var(--mdk-accent);
+  outline-offset: 2px;
+}
+
+.mdk-samples {
+  display: grid;
+  gap: 0.4rem;
+}
+.mdk-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.mdk-chip {
+  font: inherit;
+  font-size: 0.8125rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--mdk-border);
+  background: var(--mdk-surface);
+  color: var(--mdk-text);
+  cursor: pointer;
+}
+.mdk-chip[aria-pressed="true"] {
+  border-color: var(--mdk-accent);
+  color: var(--mdk-accent);
+  font-weight: 600;
+}
+
+/* Form */
+.mdk-layout {
+  display: grid;
+  gap: calc(var(--mdk-gap) * 1.5);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .mdk-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Keep the answer on screen when an example is tapped. */
+  .mdk-result {
+    order: -1;
+    position: static;
+  }
+}
+.mdk-form {
+  display: grid;
+  gap: var(--mdk-gap);
+}
+.mdk-fieldset {
+  border: 1px solid var(--mdk-border);
+  border-radius: var(--mdk-radius);
+  padding: 0.75rem 1rem 1rem;
+}
+.mdk-legend {
+  font-weight: 620;
+  padding: 0 0.35rem;
+}
+.mdk-grid {
+  display: grid;
+  gap: 0.75rem 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+}
+.mdk-field {
+  display: grid;
+  gap: 0.2rem;
+  align-content: start;
+}
+.mdk-input {
+  font: inherit;
+  font-size: 0.875rem;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border-radius: calc(var(--mdk-radius) * 0.7);
+  border: 1px solid var(--mdk-border);
+  background: var(--mdk-bg);
+  color: var(--mdk-text);
+}
+.mdk-input:disabled {
+  opacity: 0.55;
+}
+.mdk-input:invalid {
+  border-color: var(--mdk-negative);
+}
+.mdk-number {
+  display: grid;
+  gap: 0.25rem;
+}
+.mdk-check {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--mdk-muted);
+}
+
+/* Result */
+.mdk-result {
+  position: sticky;
+  top: 1rem;
+  border: 1px solid var(--mdk-border);
+  border-radius: var(--mdk-radius);
+  background: var(--mdk-surface);
+  padding: 1.1rem;
+  min-height: 10rem;
+}
+.mdk-prediction {
+  display: grid;
+  gap: 0.9rem;
+}
+.mdk-outcome {
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+.mdk-outcome--positive {
+  color: var(--mdk-positive);
+}
+.mdk-outcome--negative {
+  color: var(--mdk-negative);
+}
+.mdk-big {
+  display: grid;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.mdk-actual {
+  font-size: 0.8125rem;
+}
+.mdk-version {
+  font-family: var(--mdk-mono);
+  font-size: 0.6875rem;
+  color: var(--mdk-muted);
+}
+.mdk-gauge {
+  display: grid;
+  gap: 0.35rem;
+}
+.mdk-gauge__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.mdk-gauge__value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.mdk-gauge__track {
+  position: relative;
+  height: 0.75rem;
+  border-radius: 999px;
+  background: var(--mdk-border);
+}
+.mdk-gauge__fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--mdk-accent);
+  transition: width 300ms ease;
+}
+.mdk-gauge__threshold {
+  position: absolute;
+  top: -0.3rem;
+  bottom: -0.3rem;
+  width: 2px;
+  background: var(--mdk-text);
+}
+
+.mdk-explanation {
+  display: grid;
+  gap: 0.35rem;
+  border-top: 1px solid var(--mdk-border);
+  padding-top: 0.8rem;
+}
+.mdk-path {
+  list-style: none;
+  display: grid;
+  gap: 0.5rem;
+  counter-reset: mdk-step;
+}
+.mdk-path__step {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.2rem 0.6rem;
+  font-size: 0.8125rem;
+  counter-increment: mdk-step;
+}
+.mdk-path__rule::before {
+  content: counter(mdk-step) ". ";
+  color: var(--mdk-muted);
+}
+.mdk-path__value {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.mdk-bar {
+  grid-column: 1 / -1;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: var(--mdk-border);
+  overflow: hidden;
+}
+.mdk-bar__fill {
+  display: block;
+  height: 100%;
+  background: var(--mdk-accent);
+}
+.mdk-contrib {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+}
+.mdk-contrib__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 3.5rem;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.8125rem;
+}
+.mdk-contrib__axis {
+  position: relative;
+  height: 0.6rem;
+  border-left: 1px solid transparent;
+  background: linear-gradient(var(--mdk-border), var(--mdk-border)) center / 1px 100% no-repeat;
+}
+.mdk-contrib__bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+.mdk-contrib__bar--up {
+  left: 50%;
+  background: var(--mdk-positive);
+}
+.mdk-contrib__bar--down {
+  right: 50%;
+  background: var(--mdk-negative);
+}
+.mdk-contrib__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Status */
+.mdk-status {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.875rem;
+}
+.mdk-status--error {
+  color: var(--mdk-negative);
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.mdk-spinner {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  border: 2px solid var(--mdk-border);
+  border-top-color: var(--mdk-accent);
+  animation: mdk-spin 0.8s linear infinite;
+}
+@keyframes mdk-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mdk-spinner {
+    animation-duration: 2.4s;
+  }
+  .mdk-gauge__fill {
+    transition: none;
+  }
+}
+
+/* Explore */
+.mdk-headline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+}
+.mdk-stat {
+  border: 1px solid var(--mdk-border);
+  border-radius: var(--mdk-radius);
+  background: var(--mdk-surface);
+  padding: 0.75rem 0.9rem;
+  display: grid;
+  gap: 0.1rem;
+}
+.mdk-stat__value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.mdk-figure {
+  display: grid;
+  gap: 0.75rem;
+  border: 1px solid var(--mdk-border);
+  border-radius: var(--mdk-radius);
+  padding: 1rem 1.1rem 1.1rem;
+}
+.mdk-figure figcaption {
+  display: grid;
+  gap: 0.2rem;
+}
+.mdk-chart {
+  display: grid;
+  gap: 0.75rem;
+}
+.mdk-svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.mdk-gridline {
+  stroke: var(--mdk-border);
+  stroke-width: 1;
+}
+.mdk-tick,
+.mdk-axis-label {
+  fill: var(--mdk-muted);
+  font-size: 11px;
+  font-family: var(--mdk-font);
+}
+.mdk-axis-label {
+  font-size: 12px;
+}
+.mdk-line {
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linejoin: round;
+}
+.mdk-cursor {
+  stroke: var(--mdk-text);
+  stroke-dasharray: 3 3;
+  opacity: 0.5;
+}
+.mdk-dot {
+  stroke: var(--mdk-bg);
+  stroke-width: 2;
+}
+.mdk-line.mdk-series-1 {
+  stroke: var(--mdk-series-1);
+}
+.mdk-line.mdk-series-2 {
+  stroke: var(--mdk-series-2);
+}
+.mdk-line.mdk-series-3 {
+  stroke: var(--mdk-series-3);
+}
+.mdk-line.mdk-series-4 {
+  stroke: var(--mdk-series-4);
+}
+.mdk-dot.mdk-series-1 {
+  fill: var(--mdk-series-1);
+}
+.mdk-dot.mdk-series-2 {
+  fill: var(--mdk-series-2);
+}
+.mdk-dot.mdk-series-3 {
+  fill: var(--mdk-series-3);
+}
+.mdk-dot.mdk-series-4 {
+  fill: var(--mdk-series-4);
+}
+.mdk-swatch.mdk-series-1 {
+  background: var(--mdk-series-1);
+}
+.mdk-swatch.mdk-series-2 {
+  background: var(--mdk-series-2);
+}
+.mdk-swatch.mdk-series-3 {
+  background: var(--mdk-series-3);
+}
+.mdk-swatch.mdk-series-4 {
+  background: var(--mdk-series-4);
+}
+
+.mdk-legend-list {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8125rem;
+  padding: 0;
+  margin: 0;
+}
+.mdk-legend-list li {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+.mdk-swatch {
+  width: 0.9rem;
+  height: 0.25rem;
+  border-radius: 2px;
+}
+
+.mdk-slider {
+  display: grid;
+  gap: 0.3rem;
+}
+.mdk-slider input[type="range"] {
+  width: 100%;
+  accent-color: var(--mdk-accent);
+}
+.mdk-badge {
+  margin-left: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--mdk-accent);
+  color: var(--mdk-accent-contrast);
+}
+.mdk-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+.mdk-readout dt {
+  font-size: 0.75rem;
+  color: var(--mdk-muted);
+}
+.mdk-readout dd {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.mdk-bars {
+  list-style: none;
+  display: grid;
+  gap: 0.4rem;
+}
+.mdk-bars__row {
+  display: grid;
+  grid-template-columns: minmax(6rem, 14rem) 1fr 3.5rem;
+  gap: 0.6rem;
+  align-items: center;
+  font-size: 0.8125rem;
+}
+.mdk-bars__track {
+  position: relative;
+  height: 0.8rem;
+}
+.mdk-bars__fill {
+  display: block;
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  background: var(--mdk-series-2);
+}
+.mdk-bars__ref,
+.mdk-ref-key {
+  border-left: 2px dashed var(--mdk-text);
+  opacity: 0.6;
+}
+.mdk-bars__ref {
+  position: absolute;
+  top: -0.2rem;
+  bottom: -0.2rem;
+}
+.mdk-ref-key {
+  display: inline-block;
+  height: 0.8rem;
+  vertical-align: middle;
+}
+.mdk-bars__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.mdk-threshold {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  align-items: center;
+}
+.mdk-confusion,
+.mdk-table {
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+.mdk-confusion caption {
+  caption-side: bottom;
+  padding-top: 0.4rem;
+  text-align: left;
+}
+.mdk-confusion th,
+.mdk-confusion td {
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+}
+.mdk-confusion th[scope="row"] {
+  text-align: right;
+  font-weight: 560;
+}
+.mdk-cell {
+  font-size: 1rem;
+  font-weight: 650;
+  border: 1px solid var(--mdk-border);
+  min-width: 6rem;
+}
+.mdk-cell--good {
+  color: var(--mdk-positive);
+}
+.mdk-cell--bad {
+  color: var(--mdk-negative);
+}
+.mdk-table-wrap {
+  overflow-x: auto;
+}
+.mdk-table {
+  width: 100%;
+}
+.mdk-table th,
+.mdk-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--mdk-border);
+  text-align: right;
+}
+.mdk-table th:first-child,
+.mdk-table td:first-child {
+  text-align: left;
+}
+.mdk-table th {
+  font-weight: 600;
+  color: var(--mdk-muted);
+}
+.mdk-row--highlight td {
+  font-weight: 650;
+  background: var(--mdk-surface);
+}
