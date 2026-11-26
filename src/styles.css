@@ -1,8 +1,11 @@
 /*
  * ml-demo-kit styles. Every visual decision is a --mdk-* custom property, so a host page restyles
- * the kit by setting variables on `.mdk-root` (or any ancestor); no class overrides needed.
+ * the kit by setting variables on any ancestor (or `.mdk-root`); no class overrides needed.
+ *
+ * Defaults live on `:where(:root)` (zero specificity) rather than on `.mdk-root`, so a value set on
+ * any ancestor inherits down and wins.
  */
-.mdk-root {
+:where(:root) {
   --mdk-font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mdk-mono: ui-monospace, "SF Mono", Menlo, monospace;
   --mdk-bg: #ffffff;
@@ -20,19 +23,22 @@
   --mdk-series-4: #13795b;
   --mdk-radius: 10px;
   --mdk-gap: 1rem;
+  --mdk-padding: 0;
+}
 
+.mdk-root {
   font-family: var(--mdk-font);
   color: var(--mdk-text);
   background: var(--mdk-bg);
   line-height: 1.5;
-  padding: var(--mdk-padding, 0);
+  padding: var(--mdk-padding);
   border-radius: var(--mdk-radius);
   display: grid;
   gap: var(--mdk-gap);
 }
 
 @media (prefers-color-scheme: dark) {
-  .mdk-root:where(:not([data-mdk-theme="light"])) {
+  :where(:root:not([data-mdk-theme="light"])) {
     --mdk-bg: #0f1216;
     --mdk-surface: #171b21;
     --mdk-text: #e8ebef;
