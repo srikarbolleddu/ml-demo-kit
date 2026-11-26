@@ -55,7 +55,7 @@ explore, predict })` builds an in-memory client for tests and mock-API dev modes
 
 ### Theming
 
-Set variables on `.mdk-root` or any ancestor:
+Set variables on any ancestor of the components (or on `.mdk-root`):
 
 ```css
 .my-page {
@@ -77,8 +77,8 @@ Set variables on `.mdk-root` or any ancestor:
 | `--mdk-radius` / `--mdk-gap` / `--mdk-padding` | Spacing and shape              |
 | `--mdk-font` / `--mdk-mono`                    | Fonts                          |
 
-Light and dark defaults follow `prefers-color-scheme`. Set `data-mdk-theme="light"` on the root to
-force light mode.
+Light and dark defaults follow `prefers-color-scheme`. Set `data-mdk-theme="light"` on `<html>` to
+force light mode, or set your own colour variables for each theme.
 
 ## API contract
 
