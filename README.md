@@ -22,7 +22,7 @@ Used by:
 Releases are published as GitHub Release tarballs (no npm registry):
 
 ```bash
-pnpm add https://github.com/srikarbolleddu/ml-demo-kit/releases/download/v0.1.0/srikarbolleddu-ml-demo-kit-0.1.0.tgz
+pnpm add https://github.com/srikarbolleddu/ml-demo-kit/releases/download/v0.1.3/srikarbolleddu-ml-demo-kit-0.1.3.tgz
 ```
 
 ## Use
