@@ -17,8 +17,12 @@ export class DemoApiError extends Error {
 export interface HttpClientOptions {
   /** Abort a request after this long. Covers a Lambda cold start with room to spare. */
   timeoutMs?: number;
+  /** Wait before retrying a throttled (429) read once. Demo APIs use small burst limits. */
+  retryDelayMs?: number;
   fetch?: typeof fetch;
 }
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function describeValidation(detail: unknown): string {
   if (Array.isArray(detail)) {
@@ -36,9 +40,24 @@ function describeValidation(detail: unknown): string {
 export function createHttpClient(apiUrl: string, options: HttpClientOptions = {}): DemoClient {
   const base = apiUrl.replace(/\/+$/, "");
   const timeoutMs = options.timeoutMs ?? 20_000;
+  const retryDelayMs = options.retryDelayMs ?? 800;
   const doFetch = options.fetch ?? globalThis.fetch.bind(globalThis);
 
   async function request<T>(path: string, init?: RequestInit): Promise<T> {
+    try {
+      return await attempt<T>(path, init);
+    } catch (error) {
+      // A throttled read is safe to repeat; predictions are never retried automatically.
+      const isRead = !init?.method || init.method === "GET";
+      if (isRead && error instanceof DemoApiError && error.kind === "rate_limited") {
+        await sleep(retryDelayMs);
+        return attempt<T>(path, init);
+      }
+      throw error;
+    }
+  }
+
+  async function attempt<T>(path: string, init?: RequestInit): Promise<T> {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
     let response: Response;
