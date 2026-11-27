@@ -26,11 +26,31 @@ describe("createHttpClient", () => {
     [500, "server"],
   ])("maps HTTP %i to %s", async (status, kind) => {
     const fetch = vi.fn().mockResolvedValue(json(status, { detail: "x" }));
-    const error = await createHttpClient("https://api.test", { fetch })
+    const error = await createHttpClient("https://api.test", { fetch, retryDelayMs: 1 })
       .samples()
       .catch((e: unknown) => e);
     expect(error).toBeInstanceOf(DemoApiError);
     expect((error as DemoApiError).kind).toBe(kind);
+  });
+
+  it("retries a throttled read once, but never a prediction", async () => {
+    const fetch = vi
+      .fn()
+      .mockImplementationOnce(async () => json(429, {}))
+      .mockImplementation(async () => json(200, { ok: true }));
+    const client = createHttpClient("https://api.test", { fetch, retryDelayMs: 1 });
+    await expect(client.schema()).resolves.toEqual({ ok: true });
+    expect(fetch).toHaveBeenCalledTimes(2);
+
+    const predictFetch = vi.fn(async () => json(429, {}));
+    const error = await createHttpClient("https://api.test", {
+      fetch: predictFetch,
+      retryDelayMs: 1,
+    })
+      .predict({})
+      .catch((e: unknown) => e);
+    expect((error as DemoApiError).kind).toBe("rate_limited");
+    expect(predictFetch).toHaveBeenCalledTimes(1);
   });
 
   it("turns FastAPI validation details into a readable message", async () => {

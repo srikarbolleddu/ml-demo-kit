@@ -41,11 +41,12 @@ type Setup = { schema: DemoSchema; samples: DemoSample[] };
 export function TabularDemo({ className, hideHeader, onPredict, ...source }: TabularDemoProps) {
   const client = useClient(source);
   const [setup, retry] = useLoad<Setup>(
-    () =>
-      Promise.all([client.schema(), client.samples()]).then(([schema, samples]) => ({
-        schema,
-        samples,
-      })),
+    // One request at a time: demo APIs run behind small burst limits.
+    async () => {
+      const schema = await client.schema();
+      const samples = await client.samples();
+      return { schema, samples };
+    },
     [client],
   );
 
