@@ -33,7 +33,9 @@ export function ThresholdChart({ spec }: { spec: ThresholdChartSpec }) {
       <label className="mdk-slider">
         <span className="mdk-label">
           Threshold: <strong>{formatValue(point.threshold, "percent")}</strong>
-          {isChosen && <span className="mdk-badge">chosen on validation data</span>}
+          {isChosen && (
+            <span className="mdk-badge">{spec.selected_label ?? "chosen on validation data"}</span>
+          )}
         </span>
         <input
           type="range"

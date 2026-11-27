@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { fixtureClient } from "../test/fixtureClient";
+import { createMockClient } from "../client";
+import { fixtureClient, fixtureData } from "../test/fixtureClient";
 import { ExplorePanel } from "./ExplorePanel";
 
 describe("ExplorePanel", () => {
@@ -27,6 +28,17 @@ describe("ExplorePanel", () => {
     expect(within(figure).getByText("5%")).toBeVisible();
     expect(within(figure).getByRole("table").textContent).not.toBe(before);
     expect(within(figure).queryByText("chosen on validation data")).not.toBeInTheDocument();
+  });
+
+  it("uses a custom badge for the selected cutoff when given", async () => {
+    const data = fixtureData.explore;
+    const charts = data.charts.map((c) =>
+      c.kind === "threshold" ? { ...c, selected_label: "chosen by cross-validation" } : c,
+    );
+    const client = createMockClient({ ...fixtureData, explore: { ...data, charts } }, 0);
+    render(<ExplorePanel client={client} only={["threshold"]} />);
+
+    expect(await screen.findByText("chosen by cross-validation")).toBeVisible();
   });
 
   it("renders only the requested charts, in order", async () => {

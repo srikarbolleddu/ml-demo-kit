@@ -126,6 +126,8 @@ export interface ThresholdChartSpec extends ChartBase {
   positive_label: string;
   negative_label: string;
   selected: number;
+  /** Badge shown at the selected cutoff. Default: "chosen on validation data". */
+  selected_label?: string;
   sweep: ThresholdPoint[];
 }
 
